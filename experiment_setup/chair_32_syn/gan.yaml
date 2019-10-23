@@ -1,0 +1,86 @@
+type: mp_gan
+
+log_dir: ""
+output_dir: ""
+previous_model: ""
+
+max_iter: 60000
+display_step: 500
+checkpoint_step: 5000
+
+
+shared:
+  gpu_list: [0]
+#  voxel_order: "NDHWC" #n,z,y,x,c
+
+data_loader_train:
+  type: data_loader_mask_label
+  data_folder: ""
+  data_name: mask_label.tfrecord
+
+  random_shuffle: 0
+
+  batch_size: 64
+  width: 32
+  height: 32
+  channel: 1
+
+  noise_to_mask: 0
+
+generator:
+  type: voxel_generator
+  truncation_sigma: 0.75    #sigma of truncation trick when inferencing, set to -1 to turn off
+
+  network: 
+    type: voxel_generator
+    z_dim: 256
+    nc_f: 512
+    nd_f: 4
+    out_dim: 32
+    sn: 0
+    norm: 'bn'
+    act: 'relu'
+    mirror: 1
+
+discriminator:
+  type: multi_view_image_discriminator
+  network:
+    type: multi_view_image_discriminator
+    nc_f: 64
+    nd_l: 4
+    n_head: 8
+    n_shared: 2
+    sn: 1
+    norm: 'None'
+    act: 'lrelu'
+
+projection:
+  type: multi_view_mask_projection
+  render_method: 'drc'   #drc (CVPR 2017) | nv (SIG 2019)
+  view_def_file: "./view_def/16_azimuth_bin.json"
+  camera:
+    type: "ortho"
+    fov_degree: 60
+    image_size: [32,32]
+    viewport: [-1.4,1.4,-1.4,1.4]
+    z_near: 0.0
+    z_far: 3.0
+    z_sample_cnt: 48
+
+loss:
+  type: loss_gan
+  gan_loss: "wgan"
+  gp: 10.0
+  tv_voxel: 0
+  beta_prior: 0
+
+solver_G:
+  type: solver_base
+  param: adam-0.0001-0.5-0.999
+  dg_ratio: 1
+
+solver_D:
+  type: solver_base
+  param: adam-0.0001-0.5-0.999
+  dg_ratio: 2
+  

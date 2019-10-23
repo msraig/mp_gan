@@ -1,0 +1,63 @@
+type: mp_classifier
+
+log_dir: ""
+output_dir: ""
+previous_model: ""
+
+max_iter: 100000
+display_step: 500
+checkpoint_step: 5000
+
+shared:
+  gpu_list: [0]
+
+data_loader_train:
+  type: data_loader_mask_label
+  data_folder: ""
+  data_name: syn_data_train.tfrecord
+
+  random_shuffle: 0
+  
+  batch_size: 32
+  width: 32
+  height: 32
+  channel: 1
+
+data_loader_val:
+  type: data_loader_mask_label
+  data_folder: ""
+  data_name: syn_data_val.tfrecord
+
+  random_shuffle: 0
+  
+  batch_size: 1
+  width: 32
+  height: 32
+  channel: 1
+
+data_loader_test:
+  type: data_loader_mask_label
+  data_folder: ""
+  data_name: mask_label.tfrecord
+
+  random_shuffle: 0
+  batch_size: 1
+  width: 32
+  height: 32
+  channel: 1
+
+classifier:
+  type: image_classifier
+  network:
+    type: image_classifier
+    nc_f: 32
+    nd_l: 4
+    norm: 'bn'
+    act: 'relu'
+
+loss:
+  type: loss_classifier
+
+solver:
+  type: solver_base
+  param: adam-0.001-0.5-0.999

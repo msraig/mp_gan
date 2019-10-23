@@ -1,0 +1,52 @@
+#   tag: xiao_custom_env:hadoop2.7.2-ubuntu16.04-tf1.14.0-hdfsmount
+#   based on official image of tensorflow 1.14.0
+#   added tensorflow graphics support
+
+FROM tensorflow/tensorflow:1.14.0-gpu-py3
+
+# ENV HADOOP_VERSION=2.7.2
+# LABEL HADOOP_VERSION=2.7.2
+
+RUN apt-get -y update
+RUN apt-get -y install build-essential wget curl unzip automake openjdk-8-jdk openssh-server openssh-client lsof libcupti-dev
+RUN apt-get -y install git libopenexr-dev
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
+
+
+ENV PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/targets/x86_64-linux/lib/stubs
+
+# #hdfs mount
+# RUN apt-get -y --allow-unauthenticated update && \
+# RUN apt-get -y install git \
+#         libopenexr-dev \
+#         fuse \
+#         golang \
+#         libjasper1 \
+#         libjpeg8 \
+#         libpng12-0 \
+#         libgfortran3 && \
+    # apt-get clean && \
+    # rm -rf /var/lib/apt/lists/*
+
+WORKDIR /
+# RUN git clone --recursive https://github.com/Microsoft/hdfs-mount.git && \
+#     cd hdfs-mount && \
+#     make -j $(nproc) && \
+#     cp hdfs-mount /bin && \
+#     cd .. && \
+#     rm -rf hdfs-mount
+
+#python packages
+RUN pip install tensorflow-probability==0.7.0 numpy scipy scikit-learn opencv-python==4.0.0.21 transforms3d matplotlib>=2.1.0 py-vox-io tqdm pandas PyYAML==5.1 scikit-image==0.15.0
+RUN pip install trimesh[easy]
+
+#tensorflow graphics
+RUN pip install --upgrade tensorflow-graphics-gpu
+RUN pip install --upgrade OpenEXR
+
+#tensorboard with 3D plugins
+RUN pip install tb-nightly
+
+WORKDIR /root

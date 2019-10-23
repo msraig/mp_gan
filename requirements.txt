@@ -1,0 +1,16 @@
+numpy 
+scipy
+scikit-learn
+transforms3d
+py-vox-io 
+tqdm
+tensorflow-gpu == 1.14.0
+tensorflow-probability==0.7.0  
+opencv-python==4.0.0.21  
+matplotlib>=2.1.0  
+PyYAML==5.1 
+scikit-image==0.15.0
+
+tensorflow-graphics-gpu
+OpenEXR
+tb-nightly
