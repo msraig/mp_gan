@@ -48,7 +48,7 @@ Furthermore, to retrain the network, you may also need to download the datasets 
 
 ### Play with pre-trained models
 We provide pre-trained model of our 3D shape generator on chair (32^3) and bird (64^3). They are trained with only 2D silouette image collections.
-You can download the pretrained model here: XXX
+You can download the pretrained model here: https://drive.google.com/open?id=1cIAl-CJMWoClc5JP95CSwI1uc5Zo0DS6
 
 To generate some voxel 3D shapes from pre-trained models, please run:
 
